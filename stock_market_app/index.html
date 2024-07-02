@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Tracker</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stock Market Tracker</h1>
+    <input type="text" id="stockInput" placeholder="Enter stock symbol (e.g., AAPL)">
+    <button onclick="fetchStock()">Track</button>
+    <table id="stockTable">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Price</th>
+                <th>Change</th>
+                <th>Volume</th>
+            </tr>
+        </thead>
+        <tbody id="stockData">
+        </tbody>
+    </table>
+
+    <script>
+function fetchStock() {
+const symbol = document.getElementById('stockInput').value.toUpperCase();
+const apiKey = ''; 
+const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`;
+            
+fetch(url)
+.then(response => response.json())
+.then(data => {
+if(data['Error Message']) {
+throw new Error(data['Error Message']);
+} else {
+const stockInfo = data['Global Quote'];
+displayStock(stockInfo);
+}
+})
+.catch(error => {
+console.log('Error fetching stock data:', error);
+alert('Error fetching stock data. Please try again later.');
+        });
+        }
+        
+function displayStock(stock) {
+const stockData = document.getElementById('stockData');
+stockData.innerHTML = '';
+const row = document.createElement('tr');
+row.innerHTML = `
+   <td>${stock['01. symbol']}</td>
+   <td>${stock['05. price']}</td>
+   <td>${stock['09. change']}</td>
+   <td>${stock['06. volume']}</td>
+            `;
+    stockData.appendChild(row);
+        }
+    </script>
+</body>
+</html>
